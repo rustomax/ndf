@@ -149,7 +149,7 @@ proc checkArgs(): (string, string) =
   var o: File
   if open(o, out_file, fmWrite):
     try:
-      write(o, "ndf - Nim Duplicate Files Finder")
+      write(o, "\n")
     except:
       printErrorMessage(emOutWrite)
     finally:
@@ -162,7 +162,7 @@ proc checkArgs(): (string, string) =
 # Main program
 # TODO: More flexible argument handling
 #       - allow multiple dir_roots to be analyzed
-proc main(): void =  
+proc main(): void =
 
   let (dir_root, out_file) = checkArgs()
 

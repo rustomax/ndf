@@ -23,7 +23,7 @@ ndf dir_to_scan output_file
 > Recursively scan directory `test_files` for duplicate files and save the results in `report.out`. Duplicate files will be grouped together.
 
 ```
-$ target/ndf test_files report.out
+$ ndf test_files report.out
 
 Nim Duplicate File Finder
 
