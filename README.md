@@ -2,14 +2,13 @@
 
 Command line utility written in [Nim](https://nim-lang.org/) to find duplicate files. This program does not delete any files. It generates a list of duplicates in a specific directory for you to review and deal with them as you see fit. So far `ndf` has been tested on OSX only. It *should* work on Linux and Windows as well.
 
-## Compile and Run
+## Compile
 
 ```sh
 git clone https://github.com/rustomax/ndf.git
 cd ndf
 nimble install murmur
 nim compile -d:release -o:ndf ndf.nim
-./ndf [arguments]
 ```
 
 ## Usage
