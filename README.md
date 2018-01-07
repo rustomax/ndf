@@ -1,2 +1,56 @@
 # ndf
-Duplicate file finder written in nim
+
+Command line utility written in [Nim](https://nim-lang.org/) to find duplicate files. This program does not delete any files. It generates a list of duplicates in a specific directory for you to review and deal with them as you see fit. So far `ndf` has been tested on OSX only. It *should* work on Linux and Windows as well.
+
+## Compile and Run
+
+```sh
+git clone https://github.com/rustomax/ndf.git
+cd ndf
+nimble install murmur
+nim compile -d:release -o:ndf ndf.nim
+./ndf [arguments]
+```
+
+## Usage
+
+```sh
+ndf dir_to_scan output_file
+```
+
+## Sample run
+
+> Recursively scan directory `test_files` for duplicate files and save the results in `report.out`. Duplicate files will be grouped together.
+
+```
+$ target/ndf test_files report.out
+
+Nim Duplicate File Finder
+
+Getting the list of files               ✔ Found 6 files in 3 file groups
+Discarding files with unique sizes      ✔ Found 5 files in 2 file groups
+Getting file hashes                     ✔ Found 5 files in 3 file groups
+Discarding files with unique hashes     ✔ Found 4 files in 2 file groups
+Writing final report                    ✔ Found 4 files in 2 file groups
+
+$ cat report.out
++==> Group: 1 has 2 duplicate files:
+| test_files/file1.txt
+| test_files/file3d.txt
+
++==> Group: 2 has 2 duplicate files:
+| test_files/.hidden_file
+| test_files/a_subdir/file4.dat
+```
+
+## Contributing
+
+1. Fork it ( https://github.com/rustomax/ndf/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+## Contributors
+
+- [[rustomax]](https://github.com/rustomax) Max Skybin - creator, maintainer
