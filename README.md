@@ -1,6 +1,10 @@
 # ndf
 
-Command line utility written in [Nim](https://nim-lang.org/) to find duplicate files. This program does not delete any files. It generates a list of duplicates in a specific directory for you to review and deal with them as you see fit. So far `ndf` has been tested on OSX only. It *should* work on Linux and Windows as well.
+Command line utility written in [Nim](https://nim-lang.org/) to find duplicate files. This program does not delete any files. It generates a list of duplicates in a specific directory for you to review and deal with them as you see fit.
+
+It is written to be acceptably fast and memory-efficient on modern hardware. Analyzing a directory of over 500,000 files of various sizes and types takes roughly 5 minutes and uses ~200MB RAM on my mid 2015 MacBook Pro.
+
+So far `ndf` has been tested on OSX only. It *should* work on Linux and Windows as well.
 
 ## Compile
 
