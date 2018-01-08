@@ -1,5 +1,3 @@
-{.experimental.}
-
 import os, tables, murmur, streams, strutils, terminal
 
 type
@@ -13,8 +11,8 @@ type
     smReadDir,
     smHashes,
     smReport,
-    smDiscardSize,
-    smDiscardHash
+    smIgnoreSize,
+    smIgnoreHash
 
   ErrorMessage = enum
     emDirRead,
@@ -54,8 +52,8 @@ proc writeAll(list: FileTable, out_file: string): void =
       o.write("| " & file & "\n")
   o.close()
 
-# Discards files with unique keys (sizes or hashes depending on when called)
-proc discardUnique(list_in: FileTable): FileTable =
+# Ignores files with unique keys (sizes or hashes depending on when called)
+proc ignoreUnique(list_in: FileTable): FileTable =
   var list_out = initTable[BiggestInt, seq[string]]()
   result = initTable[BiggestInt, seq[string]]()
   for key in keys list_in:
@@ -66,12 +64,10 @@ proc discardUnique(list_in: FileTable): FileTable =
 # Helper function to hash a file (not to be called directly; call from getFileHashes)
 proc hashFile(file: string): BiggestInt =
   const buf_size = 16_384
-
   var
     i: File
     buf = newString(buf_size)
     temp_hash: string = ""
-
   result = BiggestInt(-1)
   if open(i, file):
     try:
@@ -106,8 +102,8 @@ proc printStatusMessage(sm: StatusMessage): void =
     of smReadDir: "Getting the list of files"
     of smHashes: "Getting file hashes"
     of smReport: "Writing final report"
-    of smDiscardSize: "Discarding files with unique sizes"
-    of smDiscardHash: "Discarding files with unique hashes"
+    of smIgnoreSize: "Ignoring files with unique sizes"
+    of smIgnoreHash: "Ignoring files with unique hashes"
   stdout.write(message)
   stdout.flushFile
   if sm != smWelcome:
@@ -132,19 +128,15 @@ proc checkArgs(): (string, string) =
   # Number of parameters
   if commandLineParams().len != 2:
     printErrorMessage(emArgNum)
-
   let
     dir_root = commandLineParams()[0]
     out_file = commandLineParams()[1]
-
   # Source directory should exist and be readable
   if not existsDir(dir_root):
     printErrorMessage(emDirRead)
-
   # Output file must not exist
   if existsFile(out_file):
     printErrorMessage(emOutFileExists)
-
   # Must be able to create and write into the output file
   var o: File
   if open(o, out_file, fmWrite):
@@ -160,8 +152,7 @@ proc checkArgs(): (string, string) =
   result = (dir_root, out_file)
 
 # Main program
-# TODO: More flexible argument handling
-#       - allow multiple dir_roots to be analyzed
+# TODO: More flexible argument handling (allow multiple dir_roots to be analyzed)
 proc main(): void =
 
   let (dir_root, out_file) = checkArgs()
@@ -173,8 +164,8 @@ proc main(): void =
   var files = readDir(dir_root)
   files.printSummary
 
-  printStatusMessage(smDiscardSize)
-  files = files.discardUnique
+  printStatusMessage(smIgnoreSize)
+  files = files.ignoreUnique
   files.printSummary
 
   printStatusMessage(smHashes)
@@ -182,8 +173,8 @@ proc main(): void =
   files = files.getFileHashes
   files.printSummary
 
-  printStatusMessage(smDiscardHash)
-  files = files.discardUnique
+  printStatusMessage(smIgnoreHash)
+  files = files.ignoreUnique
   files.printSummary
 
   printStatusMessage(smReport)
