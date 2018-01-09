@@ -6,13 +6,31 @@ It is written to be acceptably fast and memory-efficient on modern hardware. Ana
 
 So far `ndf` has been tested on OSX only. It *should* work on Linux and Windows as well.
 
-## Compile
+## Install with nimble
+
+```sh
+nimble install ndf
+```
+
+Nimble will install `ndf` into `~/.nimble/pkgs/ndf-<version>/`. To install `ndf` system-wide copy the binary it into a `bin` folder in your path, i.e.
+
+```sh
+cp ~/.nimble/pkgs/ndf-0.1.0/ndf /usr/local/bin/
+```
+
+## Install from source
 
 ```sh
 git clone https://github.com/rustomax/ndf.git
 cd ndf
 nimble install murmur
 nim compile -d:release -o:ndf ndf.nim
+```
+
+To install `ndf` system-wide copy the binary it into a `bin` folder in your path, i.e.
+
+```sh
+cp ndf /usr/local/bin/
 ```
 
 ## Usage
@@ -25,7 +43,7 @@ ndf dir_to_scan output_file
 
 > Recursively scan directory `test_files` for duplicate files and save the results in `report.out`. Duplicate files will be grouped together.
 
-```
+```sh
 $ ndf test_files report.out
 
 Nim Duplicate File Finder
@@ -49,10 +67,10 @@ $ cat report.out
 ## Contributing
 
 1. Fork it ( https://github.com/rustomax/ndf/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+1. Create your feature branch (`git checkout -b my-new-feature`)
+1. Commit your changes (`git commit -am 'Add some feature'`)
+1. Push to the branch (`git push origin my-new-feature`)
+1. Create a new Pull Request
 
 ## Contributors
 
