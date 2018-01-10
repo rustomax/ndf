@@ -110,6 +110,7 @@ proc printStatusMessage(sm: StatusMessage): void =
     for i in 1..40 - message.len():
       stdout.write(" ")
     stdout.write("⌛")
+    stdout.flushFile
 
 # Prints error messages
 proc printErrorMessage(em: ErrorMessage): void =
@@ -160,7 +161,6 @@ proc main(): void =
   hideCursor()
   printStatusMessage(smWelcome)
   printStatusMessage(smReadDir)
-  stdout.flushFile
   var files = readDir(dir_root)
   files.printSummary
 
@@ -169,7 +169,6 @@ proc main(): void =
   files.printSummary
 
   printStatusMessage(smHashes)
-  stdout.flushFile
   files = files.getFileHashes
   files.printSummary
 
@@ -178,7 +177,6 @@ proc main(): void =
   files.printSummary
 
   printStatusMessage(smReport)
-  stdout.flushFile
   files.writeAll(out_file)
   files.printSummary
 
