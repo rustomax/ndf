@@ -6,6 +6,18 @@ It is written to be acceptably fast and memory-efficient on modern hardware. Ana
 
 So far `ndf` has been tested on OSX only. It *should* work on Linux and Windows as well.
 
+## Install with nimble
+
+```sh
+nimble install ndf
+```
+
+Nimble will install `ndf` into `~/.nimble/pkgs/ndf-<version>/`. To install `ndf` system-wide copy the binary it into a `bin` folder in your path, i.e.
+
+```sh
+cp ~/.nimble/pkgs/ndf-0.1.0/ndf /usr/local/bin/
+```
+
 ## Install from source
 
 ```sh
