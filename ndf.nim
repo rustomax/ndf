@@ -67,14 +67,13 @@ proc hashFile(file: string): BiggestInt =
   var
     i: File
     buf = newString(buf_size)
-    temp_hash: string = ""
+    temp_hash: BiggestInt
   result = BiggestInt(-1)
   if open(i, file):
     try:
       while i.readChars(buf, 0, buf_size) > 0:
-        let combined_hash = temp_hash & intToStr((int)hash(buf))
-        temp_hash = intToStr((int)hash(combined_hash))
-      result = BiggestInt parseInt(temp_hash)
+        temp_hash = temp_hash xor (BiggestInt)hash(buf)
+      result = temp_hash
     except:
       discard
     finally:
