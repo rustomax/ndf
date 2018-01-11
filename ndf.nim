@@ -39,7 +39,10 @@ proc printSummary(list: FileTable): void =
   for key in keys list:
     file_count += list[key].len()
   cursorBackward(stdout, 0)
-  echo "✔ Found ", file_count, " files in ", list.len(), " file groups"
+  setForegroundColor(stdout, fgGreen)
+  stdout.write("✔")
+  resetAttributes()
+  echo " Found ", file_count, " files in ", list.len(), " file groups"
 
 # Writes all files and groups into out_file
 proc writeAll(list: FileTable, out_file: string): void =
@@ -97,12 +100,17 @@ proc getFileHashes(list_in: FileTable): FileTable =
 # Prints status messages
 proc printStatusMessage(sm: StatusMessage): void =
   let message = case sm:
-    of smWelcome: "\nNim Duplicate File Finder\n\n"
+    of smWelcome: "\nNim Duplicate Files Finder\n\n"
     of smReadDir: "Getting the list of files"
     of smHashes: "Getting file hashes"
     of smReport: "Writing final report"
     of smIgnoreSize: "Ignoring files with unique sizes"
     of smIgnoreHash: "Ignoring files with unique hashes"
+  resetAttributes()
+  setForegroundColor(stdout, fgCyan)
+  if sm != smWelcome:
+    stdout.write("Hint: ")
+    resetAttributes()
   stdout.write(message)
   stdout.flushFile
   if sm != smWelcome:
@@ -110,16 +118,20 @@ proc printStatusMessage(sm: StatusMessage): void =
       stdout.write(" ")
     stdout.write("⌛")
     stdout.flushFile
+  resetAttributes()
 
 # Prints error messages
 proc printErrorMessage(em: ErrorMessage): void =
+  resetAttributes()
   let message = case em:
     of emDirRead: "Could not read directory"
     of emArgNum: "Invalid number of arguments"
     of emOutFileExists: "Output file already exists. Will not ovewrite"
     of emOutWrite: "Could not write to output file"
   printStatusMessage(smWelcome)
+  setForegroundColor(stdout, fgRed)
   echo "ERROR: " & message
+  resetAttributes()
   echo "Usage: ndf dir_to_scan output_file"
   quit(1)
 
@@ -179,7 +191,6 @@ proc main(): void =
   files.writeAll(out_file)
   files.printSummary
 
-  resetAttributes()
   showCursor()
 
 main()
