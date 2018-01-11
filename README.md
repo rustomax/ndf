@@ -48,11 +48,11 @@ $ ndf test_files report.out
 
 Nim Duplicate File Finder
 
-Getting the list of files               ✔ Found 6 files in 3 file groups
-Discarding files with unique sizes      ✔ Found 5 files in 2 file groups
-Getting file hashes                     ✔ Found 5 files in 3 file groups
-Discarding files with unique hashes     ✔ Found 4 files in 2 file groups
-Writing final report                    ✔ Found 4 files in 2 file groups
+Hint: Getting the list of files               ✔ Found 6 files in 3 file groups
+Hint: Discarding files with unique sizes      ✔ Found 5 files in 2 file groups
+Hint: Getting file hashes                     ✔ Found 5 files in 3 file groups
+Hint: Discarding files with unique hashes     ✔ Found 4 files in 2 file groups
+Hint: Writing final report                    ✔ Found 4 files in 2 file groups
 
 $ cat report.out
 +==> Group: 1 has 2 duplicate files:
