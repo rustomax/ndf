@@ -166,7 +166,6 @@ proc validArgs(dir_roots: Value, out_file: string, force: bool): bool =
     result = false
 
 # Main program
-# TODO: More flexible argument handling (allow multiple dir_roots to be analyzed)
 proc main(): void =
 
   let doc = """
