@@ -1,4 +1,4 @@
-import os, tables, murmur, streams, strutils, terminal
+import os, tables, murmur, streams, strutils, terminal, docopt
 
 type
   FileTable = Table[
@@ -16,21 +16,21 @@ type
 
   ErrorMessage = enum
     emDirRead,
-    emArgNum,
     emOutFileExists,
     emOutWrite
 
 # Recursively gets file names and sizes of dir_root
-proc readDir(dir_root: string): FileTable =
+proc readDir(dir_roots: Value): FileTable =
   var
     list_out = initTable[BiggestInt, seq[string]]()
-  for file in walkDirRec dir_root:
-    var file_size = getFileInfo(file).size
-    if file_size > 0:
-      if list_out.hasKey(file_size):
-        list_out[file_size].add(file)
-      else:
-        list_out.add(file_size, @[file])
+  for dir_root in dir_roots:  
+    for file in walkDirRec dir_root:
+      var file_size = getFileInfo(file).size
+      if file_size > 0:
+        if list_out.hasKey(file_size):
+          list_out[file_size].add(file)
+        else:
+          list_out.add(file_size, @[file])
   result = list_out
 
 # Prints out number of files and groups in current file list
@@ -49,7 +49,7 @@ proc writeAll(list: FileTable, out_file: string): void =
   var o = open(out_file, fmWrite)
   var group_num = 1
   for key in keys list:
-    o.write("\n+==> Group: " & $group_num & " has " & $list[key].len() & " duplicate files:\n")
+    o.write("\n+==> Group # " & $group_num & " (hash:" & $key & ") has " & $list[key].len() & " duplicate files:\n")
     inc(group_num)
     for file in list[key]:
       o.write("| " & file & "\n")
@@ -125,30 +125,32 @@ proc printErrorMessage(em: ErrorMessage): void =
   resetAttributes()
   let message = case em:
     of emDirRead: "Could not read directory"
-    of emArgNum: "Invalid number of arguments"
-    of emOutFileExists: "Output file already exists. Will not ovewrite"
+    of emOutFileExists: "Output file already exists."
     of emOutWrite: "Could not write to output file"
   printStatusMessage(smWelcome)
   setForegroundColor(stdout, fgRed)
   echo "ERROR: " & message
   resetAttributes()
-  echo "Usage: ndf dir_to_scan output_file"
+  if em == emOutFileExists:
+    setForegroundColor(stdout, fgCyan)
+    stdout.write("Hint: ")
+    resetAttributes()
+    echo "Specify different output file name or force overwrite with --force (-f)"
   quit(1)
 
 # Checks program arguments
-proc checkArgs(): (string, string) =
-  # Number of parameters
-  if commandLineParams().len != 2:
-    printErrorMessage(emArgNum)
-  let
-    dir_root = commandLineParams()[0]
-    out_file = commandLineParams()[1]
+proc validArgs(dir_roots: Value, out_file: string, force: bool): bool =
+  result = true
   # Source directory should exist and be readable
-  if not existsDir(dir_root):
-    printErrorMessage(emDirRead)
+  for dir_root in dir_roots:
+    if not existsDir(dir_root):
+      printErrorMessage(emDirRead)
+      result = false
   # Output file must not exist
   if existsFile(out_file):
-    printErrorMessage(emOutFileExists)
+    if force == false:
+      printErrorMessage(emOutFileExists)
+      result = false
   # Must be able to create and write into the output file
   var o: File
   if open(o, out_file, fmWrite):
@@ -156,18 +158,47 @@ proc checkArgs(): (string, string) =
       write(o, "\n")
     except:
       printErrorMessage(emOutWrite)
+      result = false
     finally:
       close(o)
   else:
     printErrorMessage(emOutWrite)
-
-  result = (dir_root, out_file)
+    result = false
 
 # Main program
 # TODO: More flexible argument handling (allow multiple dir_roots to be analyzed)
 proc main(): void =
 
-  let (dir_root, out_file) = checkArgs()
+  let doc = """
+
+ndf - Nim Duplicate Files Finder
+Searches for duplicate files in directories.
+
+Usage:
+  ndf [options] -d <dir_root>... -o <out_file>
+  ndf (-h | --help)
+
+Options:
+  -d <dir_root>, --dir <dir_root>   Directory to scan. (Directory must exist and be readable)
+                                    You can scan multiple directories by providing multiple -d switches.
+  -o <out_file>, --out <out_file>   Output report file.
+  -h --help                         This help message.
+  -f --force                        Force overwrite target report file.
+
+Examples:
+  ndf --dir /home/user --out duplicates.out
+  ndf -d ~/Documents -d ~/Pictures -o report.txt -f
+
+"""
+
+  let args = docopt(doc, version = "0.2.0")
+
+  let dir_root = args["--dir"]
+  let out_file = $args["--out"]
+  let force = (bool)args["--force"]
+
+  if not validArgs(dir_root, out_file, force):
+    quit(1)
 
   hideCursor()
   printStatusMessage(smWelcome)

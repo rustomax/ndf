@@ -36,7 +36,24 @@ cp ndf /usr/local/bin/
 ## Usage
 
 ```sh
-ndf dir_to_scan output_file
+$ ndf -h
+ndf - Nim Duplicate Files Finder
+Searches for duplicate files in directories.
+
+Usage:
+  ndf [options] -d <dir_root>... -o <out_file>
+  ndf (-h | --help)
+
+Options:
+  -d <dir_root>, --dir <dir_root>   Directory to scan. (Directory must exist and be readable)
+                                    You can scan multiple directories by providing multiple -d switches.
+  -o <out_file>, --out <out_file>   Output report file.
+  -h --help                         This help message.
+  -f --force                        Force overwrite target report file.
+
+Examples:
+  ndf --dir /home/user --out duplicates.out
+  ndf -d ~/Documents -d ~/Pictures -o report.txt -f
 ```
 
 ## Sample run
@@ -44,24 +61,15 @@ ndf dir_to_scan output_file
 > Recursively scan directory `test_files` for duplicate files and save the results in `report.out`. Duplicate files will be grouped together.
 
 ```sh
-$ ndf test_files report.out
+$ ndf -d test_files/ -o report.out
 
-Nim Duplicate File Finder
+Nim Duplicate Files Finder
 
 Hint: Getting the list of files               ✔ Found 6 files in 3 file groups
-Hint: Discarding files with unique sizes      ✔ Found 5 files in 2 file groups
+Hint: Ignoring files with unique sizes        ✔ Found 5 files in 2 file groups
 Hint: Getting file hashes                     ✔ Found 5 files in 3 file groups
-Hint: Discarding files with unique hashes     ✔ Found 4 files in 2 file groups
+Hint: Ignoring files with unique hashes       ✔ Found 4 files in 2 file groups
 Hint: Writing final report                    ✔ Found 4 files in 2 file groups
-
-$ cat report.out
-+==> Group: 1 has 2 duplicate files:
-| test_files/file1.txt
-| test_files/file3d.txt
-
-+==> Group: 2 has 2 duplicate files:
-| test_files/.hidden_file
-| test_files/a_subdir/file4.dat
 ```
 
 ## Contributing
