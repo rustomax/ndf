@@ -1,4 +1,4 @@
-version       = "0.2.0"
+version       = "0.2.1"
 author        = "Max Skybin"
 description   = "Duplicate files finder"
 license       = "MIT"

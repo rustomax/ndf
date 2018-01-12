@@ -15,7 +15,7 @@ nimble install ndf
 Nimble will install `ndf` into `~/.nimble/pkgs/ndf-<version>/`. To install `ndf` system-wide copy the binary it into a `bin` folder in your path, i.e.
 
 ```sh
-cp ~/.nimble/pkgs/ndf-0.2.0/ndf /usr/local/bin/
+cp ~/.nimble/pkgs/ndf-0.2.1/ndf /usr/local/bin/
 ```
 
 ## Install from source
