@@ -38,7 +38,6 @@ proc printSummary(list: FileTable): void =
   var file_count = 0
   for key in keys list:
     file_count += list[key].len()
-  cursorBackward(stdout, 0)
   setForegroundColor(stdout, fgGreen)
   stdout.write("✔")
   resetAttributes()
@@ -116,7 +115,6 @@ proc printStatusMessage(sm: StatusMessage): void =
   if sm != smWelcome:
     for i in 1..40 - message.len():
       stdout.write(" ")
-    stdout.write("⌛")
     stdout.flushFile
   resetAttributes()
 
