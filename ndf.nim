@@ -39,7 +39,7 @@ proc printSummary(list: FileTable): void =
   for key in keys list:
     file_count += list[key].len()
   setForegroundColor(stdout, fgGreen)
-  stdout.write("✔")
+  stdout.write("\b✔")
   resetAttributes()
   echo " Found ", file_count, " files in ", list.len(), " file groups"
 
@@ -115,6 +115,7 @@ proc printStatusMessage(sm: StatusMessage): void =
   if sm != smWelcome:
     for i in 1..40 - message.len():
       stdout.write(" ")
+    stdout.write("⌛")
     stdout.flushFile
   resetAttributes()
 
