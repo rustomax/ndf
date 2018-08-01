@@ -70,6 +70,16 @@ Hint: Ignoring files with unique sizes        ✔ Found 5 files in 2 file groups
 Hint: Getting file hashes                     ✔ Found 5 files in 3 file groups
 Hint: Ignoring files with unique hashes       ✔ Found 4 files in 2 file groups
 Hint: Writing final report                    ✔ Found 4 files in 2 file groups
+
+$ cat report.out
+
++==> Group # 1 (hash:646164009) has 2 duplicate files:
+| test_files/file1.txt
+| test_files/file3d.txt
+
++==> Group # 2 (hash:670805744) has 2 duplicate files:
+| test_files/.hidden_file
+| test_files/a_subdir/file4.dat
 ```
 
 ## Contributing
