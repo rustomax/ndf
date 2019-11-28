@@ -18,21 +18,6 @@ Nimble will install `ndf` into `~/.nimble/pkgs/ndf-<version>/`. To install `ndf`
 cp ~/.nimble/pkgs/ndf-0.2.1/ndf /usr/local/bin/
 ```
 
-## Install from source
-
-```sh
-git clone https://github.com/rustomax/ndf.git
-cd ndf
-nimble install murmur
-nim compile -d:release -o:ndf ndf.nim
-```
-
-To install `ndf` system-wide copy the binary it into a `bin` folder in your path, i.e.
-
-```sh
-cp ndf /usr/local/bin/
-```
-
 ## Usage
 
 ```sh
@@ -73,11 +58,11 @@ Hint: Writing final report                    ✔ Found 4 files in 2 file groups
 
 $ cat report.out
 
-+==> Group # 1 (hash:646164009) has 2 duplicate files:
++==> Group # 1 has 2 duplicate files:
 | test_files/file1.txt
 | test_files/file3d.txt
 
-+==> Group # 2 (hash:670805744) has 2 duplicate files:
++==> Group # 2 has 2 duplicate files:
 | test_files/.hidden_file
 | test_files/a_subdir/file4.dat
 ```
