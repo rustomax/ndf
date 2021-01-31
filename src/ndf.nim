@@ -28,7 +28,7 @@ proc readDir(dir_roots: Value): FileTable =
                 if result.hasKey(file_size):
                     result[file_size].add(file)
                 else:
-                    result.add(file_size, @[file])
+                    result[file_size] = @[file]
 
 # Prints out number of files and groups in current file list
 proc printSummary(list: FileTable): void =
@@ -55,7 +55,7 @@ proc writeAll(list: FileTable, out_file: string): void =
 proc ignoreUnique(list_in: FileTable): FileTable =
     for key in keys list_in:
         if list_in[key].len() >= 2:
-            result.add(key, list_in[key])
+            result[key] = list_in[key]
 
 # Helper function to hash a file (not to be called directly; call from getFileHashes)
 proc hashFile(file_name: string): BiggestInt =
@@ -85,7 +85,7 @@ proc getFileHashes(list_in: FileTable): FileTable =
             if file_hash == -1:
                 continue
             if not result.hasKey(file_hash):
-                result.add(file_hash, @[file])
+                result[file_hash] = @[file]
             else:
                 result[file_hash].add(file)
 
@@ -135,11 +135,11 @@ proc validArgs(dir_roots: Value, out_file: string, force: bool): bool =
     result = true
     # Source directory should exist and be readable
     for dir_root in dir_roots:
-        if not existsDir(dir_root):
+        if not dirExists(dir_root):
             printErrorMessage(emDirRead)
             result = false
     # Output file must not exist
-    if existsFile(out_file):
+    if fileExists(out_file):
         if force == false:
             printErrorMessage(emOutFileExists)
             result = false
@@ -183,7 +183,7 @@ Examples:
 
 """
 
-    let args = docopt(doc, version = "0.2.0")
+    let args = docopt(doc, version = "0.4.0")
 
     let dir_root = args["--dir"]
     let out_file = $args["--out"]
